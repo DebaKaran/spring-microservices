@@ -1,0 +1,8 @@
+version: "3.9"
+
+services:
+  accounts:
+    image: debakarana/accounts:1.0
+    container_name: accounts-ms
+    ports:
+      - "8080:8080"
