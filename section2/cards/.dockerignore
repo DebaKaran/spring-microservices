@@ -1,0 +1,18 @@
+# Build output
+target/
+
+# VCS
+.git
+.gitignore
+
+# IDEs and editors
+.idea
+.vscode
+
+# Frontend junk (if any)
+node_modules
+
+# OS / logs
+*.log
+*.md
+*.iml
