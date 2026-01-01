@@ -7,7 +7,7 @@ RUN ./mvnw clean package -DskipTests
 
 
 # -------- STAGE 2: RUNTIME --------
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar accounts.jar
