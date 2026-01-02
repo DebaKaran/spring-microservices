@@ -8,6 +8,10 @@ services:
     container_name: accounts-ms
     ports:
       - "8080:8080"
+    mem_limit: 512m
+    cpus: 0.5
+    networks:
+      - bank-network
 
   loans:
     build:
@@ -17,6 +21,10 @@ services:
     container_name: loans-ms
     ports:
       - "8090:8090"
+    mem_limit: 512m
+    cpus: 0.5
+    networks:
+      - bank-network
   cards:
     build:
       context: ./cards
@@ -25,3 +33,10 @@ services:
     container_name: cards-ms
     ports:
       - "9000:9000"
+    mem_limit: 512m
+    cpus: 0.5
+    networks:
+      - bank-network
+networks:
+  bank-network:
+    driver: bridge
