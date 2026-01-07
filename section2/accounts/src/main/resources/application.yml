@@ -24,3 +24,8 @@ spring:
       schema-locations: classpath:sqls/schema.sql
   config:
     import: "optional:configserver:http://localhost:8071/"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh  #in your microservice, we used *
