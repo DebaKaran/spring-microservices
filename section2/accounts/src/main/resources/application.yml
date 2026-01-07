@@ -20,8 +20,15 @@ spring:
     init:
       mode: always
       schema-locations: classpath:sqls/schema.sql
+  config:
+    import:
+      - "application_qa.yml"
+      - "application_prod.yml"
+  profiles:
+    active:
+      - "qa"
 build:
-  version: 1.0.0
+  version: 3.0.0
 accounts:
   message: "Welcome to EazyBank accounts related local APIs "
   contactDetails:
