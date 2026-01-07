@@ -24,9 +24,6 @@ spring:
     import:
       - "application_qa.yml"
       - "application_prod.yml"
-  profiles:
-    active:
-      - "qa"
 build:
   version: 3.0.0
 accounts:

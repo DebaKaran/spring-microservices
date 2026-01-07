@@ -1,6 +1,8 @@
 server:
-  port: 8090
+  port: 9000
 spring:
+  application:
+    name: cards
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
@@ -18,18 +20,15 @@ spring:
     import:
       - "application_qa.yml"
       - "application_prod.yml"
-  profiles:
-    active:
-      - "qa"
 
 build:
   version: "3.0"
 
-loans:
-  message: "Welcome to EazyBank loans related local APIs "
+cards:
+  message: "Welcome to EazyBank cards related local APIs "
   contactDetails:
-    name: "Amaal Grega - Developer"
-    email: "amaal@eazybank.com"
+    name: "Dragos Lech - Developer"
+    email: "dragos@eazybank.com"
   onCallSupport:
-    - (452) 456-2176
-    - (546) 764-8934
+    - (412) 419-3491
+    - (915) 382-1932
