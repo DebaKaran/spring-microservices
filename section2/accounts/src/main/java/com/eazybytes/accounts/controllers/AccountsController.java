@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +26,23 @@ import org.springframework.web.bind.annotation.*;
 )
 @RestController
 @RequestMapping(path="/api", produces = {MediaType.APPLICATION_JSON_VALUE})
-@AllArgsConstructor
 @Validated
 public class AccountsController {
 
-    private IAccountService iAccountsService;
+    private final IAccountService iAccountsService;
+    
+    @Value("${build.version}")
+    private String buildVersion;
+
+    //Not required as we have single constructor
+    //@Autowired
+    public AccountsController(IAccountService iAccountService) {
+        this.iAccountsService = iAccountService;
+    }
+    @GetMapping("/build-info")
+    public ResponseEntity<String>  getBuildVersion() {
+        return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+    }
 
     @Operation(
             summary = "Create Account REST API",
