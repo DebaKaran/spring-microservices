@@ -42,7 +42,7 @@ public class LoansController {
         this.iLoansService = iLoansService;
     }
 
-    @Value("${build.version}")
+    @Value("${build.version:LOCAL}")
     private String buildVersion;
 
     @Autowired
