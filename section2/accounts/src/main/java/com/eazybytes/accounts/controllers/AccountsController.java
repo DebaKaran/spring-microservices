@@ -34,7 +34,7 @@ public class AccountsController {
 
     private final IAccountService iAccountsService;
     
-    @Value("${build.version}")
+    @Value("${build.version:LOCAL}")
     private String buildVersion;
 
     @Autowired

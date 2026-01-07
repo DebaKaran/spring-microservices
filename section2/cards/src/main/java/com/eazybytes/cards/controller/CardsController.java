@@ -38,7 +38,7 @@ public class CardsController {
         this.iCardsService = iCardsService;
     }
 
-    @Value("${build.version}")
+    @Value("${build.version:LOCAL}")
     private String buildVersion;
 
     @Autowired
