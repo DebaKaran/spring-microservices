@@ -1,0 +1,48 @@
+# =========================
+# Maven build output
+# =========================
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# =========================
+# Local build & IDE files
+# =========================
+.idea/
+.vscode/
+*.iml
+*.log
+
+# =========================
+# OS-specific junk
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Git & VCS metadata
+# =========================
+.git/
+.gitignore
+
+# =========================
+# Test & docs (not needed in image)
+# =========================
+src/test/
+README.md
+*.md
+
+# =========================
+# Environment / secrets
+# =========================
+.env
+.env.*
+*.pem
+*.key
+id_rsa
+id_rsa.pub
+
+# =========================
+# Docker files not needed inside image
+# =========================
+docker-compose.yml
+docker-compose*.yml
