@@ -1,5 +1,66 @@
 services:
 
+  # =========================
+  # RabbitMQ (Message Broker)
+  # =========================
+  rabbit:
+    image: rabbitmq:4-management          # RabbitMQ with management UI enabled
+    hostname: rabbitmq                    # Stable hostname for internal DNS
+    ports:
+      - "5672:5672"                       # AMQP port (used by Spring Cloud Bus)
+      - "15672:15672"                     # Management UI (http://localhost:15672)
+
+    healthcheck:
+      # Verifies RabbitMQ is actually accepting connections,
+      # not just that the container is running
+      test: rabbitmq-diagnostics check_port_connectivity
+      interval: 10s                       # Run health check every 10 seconds
+      timeout: 5s                         # Fail if command hangs >5s
+      retries: 10                         # Mark unhealthy after 10 consecutive failures
+      start_period: 5s                    # Give RabbitMQ time to boot before judging
+
+    networks:
+      - bank-network
+
+
+  # =========================
+  # Spring Cloud Config Server
+  # =========================
+  configserver:
+    build:
+      context: ./configserver             # Build from local configserver source
+      dockerfile: Dockerfile
+    image: debakarana/configserver:1.0
+    container_name: configserver
+    ports:
+      - "8071:8071"                       # Config Server port
+
+    depends_on:
+      # Config Server uses Spring Cloud Bus,
+      # so RabbitMQ must be fully ready before it starts
+      rabbit:
+        condition: service_healthy
+
+    healthcheck:
+      # Checks Spring Boot readiness probe:
+      # - JVM started
+      # - Git config loaded
+      # - Bus wired
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s                       # Check every 10 seconds
+      timeout: 5s                         # Fail if response >5s
+      retries: 7                          # Retry before marking unhealthy
+      start_period: 10s                   # Allow startup time before enforcing health
+
+    mem_limit: 512m                       # Prevent JVM from over-consuming memory
+    cpus: 0.5                             # CPU quota (good for local dev realism)
+    networks:
+      - bank-network
+
+
+  # =========================
+  # Accounts Microservice
+  # =========================
   accounts:
     build:
       context: ./accounts
@@ -8,11 +69,27 @@ services:
     container_name: accounts-ms
     ports:
       - "8080:8080"
+
     mem_limit: 512m
     cpus: 0.5
+
+    depends_on:
+      # Start ONLY after Config Server is fully ready
+      configserver:
+        condition: service_healthy
+
     networks:
       - bank-network
 
+    environment:
+      SPRING_APPLICATION_NAME: "accounts"                 # Used by Config Server to fetch config
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"  # Config Server location
+      SPRING_PROFILES_ACTIVE: "prod"                      # Profile to select correct config
+
+
+  # =========================
+  # Loans Microservice
+  # =========================
   loans:
     build:
       context: ./loans
@@ -21,10 +98,27 @@ services:
     container_name: loans-ms
     ports:
       - "8090:8090"
+
     mem_limit: 512m
     cpus: 0.5
+
+    depends_on:
+      # Do not start until Config Server is healthy
+      configserver:
+        condition: service_healthy
+
     networks:
       - bank-network
+
+    environment:
+      SPRING_APPLICATION_NAME: "loans"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      SPRING_PROFILES_ACTIVE: "prod"
+
+
+  # =========================
+  # Cards Microservice
+  # =========================
   cards:
     build:
       context: ./cards
@@ -33,10 +127,27 @@ services:
     container_name: cards-ms
     ports:
       - "9000:9000"
+
     mem_limit: 512m
     cpus: 0.5
+
+    depends_on:
+      # Same startup guarantee as other services
+      configserver:
+        condition: service_healthy
+
     networks:
       - bank-network
+
+    environment:
+      SPRING_APPLICATION_NAME: "cards"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      SPRING_PROFILES_ACTIVE: "prod"
+
+
+# =========================
+# Shared Docker Network
+# =========================
 networks:
   bank-network:
-    driver: bridge
+    driver: bridge                        # Enables service-name based DNS resolution
