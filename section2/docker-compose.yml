@@ -19,8 +19,9 @@ services:
       retries: 10                         # Mark unhealthy after 10 consecutive failures
       start_period: 5s                    # Give RabbitMQ time to boot before judging
 
-    networks:
-      - bank-network
+    extends:
+      file: ./common-config.yml
+      service: deploy-base-configdeploy
 
 
   # =========================
@@ -52,10 +53,9 @@ services:
       retries: 7                          # Retry before marking unhealthy
       start_period: 10s                   # Allow startup time before enforcing health
 
-    mem_limit: 512m                       # Prevent JVM from over-consuming memory
-    cpus: 0.5                             # CPU quota (good for local dev realism)
-    networks:
-      - bank-network
+    extends:
+      file: ./common-config.yml
+      service: microservice-base-config
 
 
   # =========================
@@ -69,22 +69,12 @@ services:
     container_name: accounts-ms
     ports:
       - "8080:8080"
-
-    mem_limit: 512m
-    cpus: 0.5
-
-    depends_on:
-      # Start ONLY after Config Server is fully ready
-      configserver:
-        condition: service_healthy
-
-    networks:
-      - bank-network
-
     environment:
-      SPRING_APPLICATION_NAME: "accounts"                 # Used by Config Server to fetch config
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"  # Config Server location
-      SPRING_PROFILES_ACTIVE: "prod"                      # Profile to select correct config
+      SPRING_APPLICATION_NAME: "accounts"
+    
+    extends:
+      file: ./common-config.yml
+      service: microservice-configserver-config
 
 
   # =========================
@@ -99,21 +89,12 @@ services:
     ports:
       - "8090:8090"
 
-    mem_limit: 512m
-    cpus: 0.5
-
-    depends_on:
-      # Do not start until Config Server is healthy
-      configserver:
-        condition: service_healthy
-
-    networks:
-      - bank-network
-
     environment:
       SPRING_APPLICATION_NAME: "loans"
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
-      SPRING_PROFILES_ACTIVE: "prod"
+    
+    extends:
+      file: ./common-config.yml
+      service: microservice-configserver-config
 
 
   # =========================
@@ -128,21 +109,12 @@ services:
     ports:
       - "9000:9000"
 
-    mem_limit: 512m
-    cpus: 0.5
-
-    depends_on:
-      # Same startup guarantee as other services
-      configserver:
-        condition: service_healthy
-
-    networks:
-      - bank-network
-
     environment:
       SPRING_APPLICATION_NAME: "cards"
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
-      SPRING_PROFILES_ACTIVE: "prod"
+    
+    extends:
+      file: ./common-config.yml
+      service: microservice-configserver-config
 
 
 # =========================
