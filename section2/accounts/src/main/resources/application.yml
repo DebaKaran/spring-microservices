@@ -28,4 +28,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh  #in your microservice, we used *
+        include: busrefresh  #in your microservice, we used *
