@@ -1,0 +1,49 @@
+services:
+
+  # -----------------------------------
+  # Base networking-only service
+  # -----------------------------------
+  network-deploy-service:
+    # Defines the shared Docker network
+    # Any service extending this will automatically join this network
+    networks:
+      - eazybank
+
+
+  # -----------------------------------
+  # Base configuration for ALL microservices
+  # -----------------------------------
+  microservice-base-config:
+    # Inherit network settings from network-deploy-service
+    extends:
+      service: network-deploy-service
+
+    deploy:
+      resources:
+        limits:
+          memory: 700m        # Memory limit for JVM-based microservices
+
+    environment:
+      # RabbitMQ hostname inside Docker network
+      # Docker DNS resolves "rabbit" → rabbit container IP
+      SPRING_RABBITMQ_HOST: "rabbit"
+
+
+  # -----------------------------------
+  # Config Server–aware microservice config
+  # -----------------------------------
+  microservice-configserver-config:
+    # Inherit:
+    # - network configuration
+    # - memory limits
+    # - RabbitMQ host config
+    extends:
+      service: microservice-base-config
+
+    environment:
+      # Activate production profile
+      SPRING_PROFILES_ACTIVE: prod
+
+      # Tell Spring Boot to fetch configuration from Config Server
+      # Uses Docker service name (NOT localhost)
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
