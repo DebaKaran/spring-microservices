@@ -1,6 +1,7 @@
 package com.eazybytes.accounts;
 
 import com.eazybytes.accounts.dto.AccountsContactInfoDto;
+import com.eazybytes.accounts.dto.BuildInfoPropertiesDto;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;
@@ -13,7 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @EnableJpaAuditing
-@EnableConfigurationProperties(value = {AccountsContactInfoDto.class})
+@EnableConfigurationProperties(value = {AccountsContactInfoDto.class, BuildInfoPropertiesDto.class})
 @OpenAPIDefinition(
         info = @Info(
                 title = "Accounts API",
