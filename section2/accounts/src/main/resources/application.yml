@@ -21,7 +21,7 @@ spring:
       mode: always
       schema-locations: classpath:sqls/schema.sql
   config:
-    import: "optional:configserver:http://localhost:8071/"
+    import: "optional:configserver:"
 management:
   endpoints:
     web:

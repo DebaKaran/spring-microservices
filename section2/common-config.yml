@@ -42,8 +42,8 @@ services:
 
     environment:
       # Activate production profile
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
 
       # Tell Spring Boot to fetch configuration from Config Server
       # Uses Docker service name (NOT localhost)
-      SPRING_CONFIG_IMPORT: "optional:configserver:http://configserver:8071"
+      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
