@@ -7,7 +7,7 @@ services:
     # Defines the shared Docker network
     # Any service extending this will automatically join this network
     networks:
-      - eazybank
+      - bank-network
 
 
   # -----------------------------------
@@ -46,4 +46,4 @@ services:
 
       # Tell Spring Boot to fetch configuration from Config Server
       # Uses Docker service name (NOT localhost)
-      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://configserver:8071"
