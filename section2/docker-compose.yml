@@ -4,24 +4,24 @@ services:
   # RabbitMQ (Message Broker)
   # =========================
   rabbit:
-    image: rabbitmq:4-management          # RabbitMQ with management UI enabled
-    hostname: rabbitmq                    # Stable hostname for internal DNS
+    image: rabbitmq:3.12-management          # RabbitMQ with management UI enabled
+    # hostname: rabbitmq                    # Stable hostname for internal DNS
     ports:
       - "5672:5672"                       # AMQP port (used by Spring Cloud Bus)
       - "15672:15672"                     # Management UI (http://localhost:15672)
-
-    healthcheck:
+    mem_limit: 512m
+    # healthcheck:
       # Verifies RabbitMQ is actually accepting connections,
       # not just that the container is running
-      test: rabbitmq-diagnostics check_port_connectivity
-      interval: 10s                       # Run health check every 10 seconds
-      timeout: 5s                         # Fail if command hangs >5s
-      retries: 10                         # Mark unhealthy after 10 consecutive failures
-      start_period: 5s                    # Give RabbitMQ time to boot before judging
+      # test: ["CMD", "rabbitmqctl", "status"]
+      # interval: 10s                       # Run health check every 10 seconds
+      # timeout: 5s                         # Fail if command hangs >5s
+      # retries: 10                         # Mark unhealthy after 10 consecutive failures
+      # start_period: 5s                    # Give RabbitMQ time to boot before judging
 
     extends:
       file: ./common-config.yml
-      service: deploy-base-configdeploy
+      service: network-deploy-service
 
 
   # =========================
