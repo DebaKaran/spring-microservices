@@ -1,10 +1,7 @@
 package com.eazybytes.loans.controller;
 
 import com.eazybytes.loans.constants.LoansConstants;
-import com.eazybytes.loans.dto.ErrorResponseDto;
-import com.eazybytes.loans.dto.LoansContactInfoDto;
-import com.eazybytes.loans.dto.LoansDto;
-import com.eazybytes.loans.dto.ResponseDto;
+import com.eazybytes.loans.dto.*;
 import com.eazybytes.loans.service.ILoansService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,14 +39,14 @@ public class LoansController {
         this.iLoansService = iLoansService;
     }
 
-    @Value("${build.version:LOCAL}")
-    private String buildVersion;
-
     @Autowired
     private Environment environment;
 
     @Autowired
     private LoansContactInfoDto loansContactInfoDto;
+
+    @Autowired
+    private BuildInfoPropertiesDto buildInfo;
 
     @Operation(
             summary = "Create Loan REST API",
@@ -201,7 +198,7 @@ public class LoansController {
     public ResponseEntity<String> getBuildInfo() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(buildVersion);
+                .body(buildInfo.getVersion());
     }
 
     @Operation(

@@ -1,10 +1,7 @@
 package com.eazybytes.cards.controller;
 
 import com.eazybytes.cards.constants.CardsConstants;
-import com.eazybytes.cards.dto.CardsContactInfoDto;
-import com.eazybytes.cards.dto.CardsDto;
-import com.eazybytes.cards.dto.ErrorResponseDto;
-import com.eazybytes.cards.dto.ResponseDto;
+import com.eazybytes.cards.dto.*;
 import com.eazybytes.cards.service.ICardsService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,8 +34,8 @@ public class CardsController {
         this.iCardsService = iCardsService;
     }
 
-    @Value("${build.version:LOCAL}")
-    private String buildVersion;
+    @Autowired
+    private BuildInfoPropertiesDto buildInfo;
 
     @Autowired
     private Environment environment;
@@ -194,7 +190,7 @@ public class CardsController {
     public ResponseEntity<String> getBuildInfo() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(buildVersion);
+                .body(buildInfo.getVersion());
     }
 
     @Operation(

@@ -1,10 +1,7 @@
 package com.eazybytes.accounts.controllers;
 
 import com.eazybytes.accounts.constants.AccountsConstants;
-import com.eazybytes.accounts.dto.AccountsContactInfoDto;
-import com.eazybytes.accounts.dto.CustomerDto;
-import com.eazybytes.accounts.dto.ErrorResponseDto;
-import com.eazybytes.accounts.dto.ResponseDto;
+import com.eazybytes.accounts.dto.*;
 import com.eazybytes.accounts.services.IAccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,9 +30,6 @@ import org.springframework.web.bind.annotation.*;
 public class AccountsController {
 
     private final IAccountService iAccountsService;
-    
-    @Value("${build.version:LOCAL}")
-    private String buildVersion;
 
     @Autowired
     private Environment environment;
@@ -43,14 +37,18 @@ public class AccountsController {
     @Autowired
     private AccountsContactInfoDto accountsContactInfoDto;
 
+    @Autowired
+    private BuildInfoPropertiesDto buildInfo;
+
     //Not required as we have single constructor
     //@Autowired
     public AccountsController(IAccountService iAccountService) {
         this.iAccountsService = iAccountService;
     }
+
     @GetMapping("/build-info")
     public ResponseEntity<String>  getBuildVersion() {
-        return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+        return ResponseEntity.status(HttpStatus.OK).body(buildInfo.getVersion());
     }
 
     @GetMapping("/java-version")
