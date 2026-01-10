@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:mysql://accountsdb:3306/accountsdb  
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: myuser
+    password: mypass
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: validate
