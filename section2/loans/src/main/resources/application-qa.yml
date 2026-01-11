@@ -1,8 +1,4 @@
-spring:
-  datasource:
-    url: ${DB_JDBC_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-  jpa:
-    hibernate:
-      ddl-auto: validate
+# Placeholder file
+# Intentionally left blank.
+# All datasource configuration is inherited from application.yml.
+# This file can be used to override any qa-specific settings in the future.
