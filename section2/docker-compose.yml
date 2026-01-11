@@ -1,3 +1,13 @@
+x-mysql-base: &mysql-base
+  image: mysql:8.0
+  networks:
+    - bank-network
+  healthcheck:
+    test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+    interval: 10s
+    timeout: 5s
+    retries: 5
+
 services:
 
   # =========================
@@ -57,6 +67,26 @@ services:
       file: ./common-config.yml
       service: microservice-base-config
 
+  accountsdb:
+    <<: *mysql-base
+    env_file:
+      - ./accounts/mysql.env.${SPRING_PROFILES_ACTIVE}
+    volumes:
+      - accounts-db-data:/var/lib/mysql
+
+  loansdb:
+    <<: *mysql-base
+    env_file:
+      - ./loans/mysql.env.${SPRING_PROFILES_ACTIVE}
+    volumes:
+      - loans-db-data:/var/lib/mysql
+
+  cardsdb:
+    <<: *mysql-base
+    env_file:
+      - ./cards/mysql.env.${SPRING_PROFILES_ACTIVE}
+    volumes:
+      - cards-db-data:/var/lib/mysql
 
   # =========================
   # Accounts Microservice
@@ -68,7 +98,7 @@ services:
     image: debakarana/accounts:1.0
     container_name: accounts-ms
     env_file:
-      - ./accounts/.env.${SPRING_PROFILES_ACTIVE}
+      - ./accounts/app.env.${SPRING_PROFILES_ACTIVE}
     environment:
       SPRING_APPLICATION_NAME: "accounts"
     ports:
@@ -89,7 +119,7 @@ services:
     image: debakarana/loans:1.0
     container_name: loans-ms
     env_file:
-      - ./loans/.env.${SPRING_PROFILES_ACTIVE}
+      - ./loans/app.env.${SPRING_PROFILES_ACTIVE}
     environment:
       SPRING_APPLICATION_NAME: "loans"
     ports:
@@ -110,7 +140,7 @@ services:
     image: debakarana/cards:1.0
     container_name: cards-ms
     env_file:
-      - ./cards/.env.${SPRING_PROFILES_ACTIVE}
+      - ./cards/app.env.${SPRING_PROFILES_ACTIVE}
     environment:
       SPRING_APPLICATION_NAME: "cards"
     ports:
@@ -119,6 +149,11 @@ services:
       file: ./common-config.yml
       service: microservice-configserver-config
 
+
+volumes:
+  accounts-db-data:
+  loans-db-data:
+  cards-db-data:
 
 # =========================
 # Shared Docker Network
