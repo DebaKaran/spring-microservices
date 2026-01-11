@@ -44,6 +44,9 @@ services:
       # Activate production profile
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
 
+      # Bind JDBC URL from environment variable
+      DB_JDBC_URL: ${DB_JDBC_URL}
+
       # Tell Spring Boot to fetch configuration from Config Server
       # Uses Docker service name (NOT localhost)
       SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
