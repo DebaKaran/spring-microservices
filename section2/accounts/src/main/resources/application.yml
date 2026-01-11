@@ -3,6 +3,13 @@ server:
 spring:
   application:
     name: accounts
+  datasource:
+    url: ${DB_JDBC_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
   sql:
     init:
       mode: always
