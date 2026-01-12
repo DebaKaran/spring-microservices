@@ -2,15 +2,35 @@
 FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
-# Copy everything needed to build
-COPY . .
+# 1. Copy Maven wrapper + pom first
+COPY mvnw pom.xml ./
+COPY .mvn .mvn
 
-# Build Spring Boot layered jar
-RUN ./mvnw clean package -DskipTests
+# 2. Download dependencies (cached unless pom.xml changes)
+RUN ./mvnw -B dependency:go-offline
 
-# Extract layers from the jar
+# 3. Now copy source code
+COPY src src
+
+# 4. Build
+RUN --mount=type=cache,target=/root/.m2 \
+    ./mvnw -B package -DskipTests
+
+# Extract layers
 RUN java -Djarmode=layertools -jar target/*.jar extract
+COPY .mvn .mvn
 
+# 2. Download dependencies (cached unless pom.xml changes)
+RUN ./mvnw -B dependency:go-offline
+
+# 3. Now copy source code
+COPY src src
+
+# 4. Build
+RUN ./mvnw -B package -DskipTests
+
+# Extract layers
+RUN java -Djarmode=layertools -jar target/*.jar extract
 
 # -------- STAGE 2: RUNTIME --------
 FROM eclipse-temurin:21-jre-alpine
