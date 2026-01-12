@@ -9,8 +9,5 @@ spring:
       enabled: true
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
   config:
     import: "optional:configserver:http://localhost:8071/"
