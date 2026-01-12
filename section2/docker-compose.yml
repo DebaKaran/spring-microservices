@@ -3,10 +3,11 @@ x-mysql-base: &mysql-base
   networks:
     - bank-network
   healthcheck:
-    test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+    test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$MYSQL_ROOT_PASSWORD || exit 1"]
     interval: 10s
     timeout: 5s
-    retries: 5
+    retries: 10
+    start_period: 30s
 
 services:
 
@@ -107,6 +108,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      configserver:
+        condition: service_healthy
       accountsdb:
         condition: service_healthy
     extends:
@@ -130,6 +133,8 @@ services:
     ports:
       - "8090:8090"
     depends_on:
+      configserver:
+        condition: service_healthy
       loansdb:
         condition: service_healthy
     
@@ -154,6 +159,8 @@ services:
     ports:
       - "9000:9000"
     depends_on:
+      configserver:
+        condition: service_healthy
       cardsdb:
         condition: service_healthy
     extends:
