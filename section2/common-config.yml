@@ -45,8 +45,11 @@ services:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
 
       # Bind JDBC URL from environment variable
-      DB_JDBC_URL: ${DB_JDBC_URL}
+      # Shared (platform-level) configuration must not contain service-specific
+      # resources such as database URLs. Therefore, the JDBC URL is defined in
+      # the service-specific environment configuration file.
+      # DB_JDBC_URL: ${DB_JDBC_URL}
 
       # Tell Spring Boot to fetch configuration from Config Server
       # Uses Docker service name (NOT localhost)
-      SPRING_CONFIG_IMPORT: "configserver:http://configserver:8071"
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://configserver:8071"
