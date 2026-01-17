@@ -1,1 +1,4 @@
 #This is the placeholder for qa environment
+spring:
+  config:
+    import: "optional:configserver:http://localhost:8071/"
