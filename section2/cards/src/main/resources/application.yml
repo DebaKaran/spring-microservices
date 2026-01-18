@@ -17,3 +17,6 @@ management:
     web:
       exposure:
         include: busrefresh, info
+  info:
+    env:
+      enabled: true
