@@ -10,15 +10,8 @@ spring:
   sql:
     init:
       mode: never
-  # config:
-  #   import: "optional:configserver:"
-  # rabbitmq:
-  #   host: localhost
-  #   port: 5672
-  #   username: guest
-  #   password: guest
 management:
   endpoints:
     web:
       exposure:
-        include: busrefresh  #in your microservice, we used *
+        include: busrefresh, info
