@@ -10,11 +10,18 @@ spring:
   sql:
     init:
       mode: never
+
+# Learning-only: actuator shutdown endpoint
+# Do NOT enable in production
+
 management:
   endpoints:
     web:
       exposure:
-        include: busrefresh, info
+        include: busrefresh, info, shutdown
   info:
     env:
+      enabled: true
+  endpoint:
+    shutdown:
       enabled: true
