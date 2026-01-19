@@ -2,24 +2,29 @@
 FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
-# Copy source
-COPY . .
+# 1: Copy Maven wrapper and pom first (for cache)
+COPY mvnw pom.xml ./
+COPY .mvn .mvn
 
-# Build Spring Boot layered jar
-RUN ./mvnw clean package -DskipTests
+# 2. Download dependencies (cached unless pom.xml changes)
+RUN --mount=type=cache,target=/root/.m2 \
+    ./mvnw -B dependency:go-offline
+
+# 3. Now copy source code
+COPY src src
+
+# 4. Build the application
+RUN --mount=type=cache,target=/root/.m2 \
+    ./mvnw -B package -DskipTests
 
 # Extract layers
 RUN java -Djarmode=layertools -jar target/*.jar extract
-
 
 # -------- STAGE 2: RUNTIME --------
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Config Server talks to Git → needs git + certs
-RUN apk add --no-cache git ca-certificates
-
-# Copy layers separately (cache-friendly)
+# Copy layers separately (Docker cache friendly)
 COPY --from=build /app/dependencies/ ./
 COPY --from=build /app/spring-boot-loader/ ./
 COPY --from=build /app/snapshot-dependencies/ ./
