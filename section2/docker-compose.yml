@@ -68,6 +68,34 @@ services:
       file: ./common-config.yml
       service: microservice-base-config
 
+  # =========================
+  # Eureka Server
+  # =========================
+  eurekaserver:
+    build:
+      context: ./eurekaserver
+      dockerfile: Dockerfile
+    image: debakarana/eurekaserver:1.0
+    container_name: eurekaserver
+    ports:
+      - "8070:8070"                      # Eureka UI
+
+    depends_on:
+      configserver:
+        condition: service_healthy
+
+    healthcheck:
+      # Eureka readiness = server started + registry initialized
+      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 7
+      start_period: 15s
+
+    extends:
+      file: ./common-config.yml
+      service: microservice-configserver-config
+
   accountsdb:
     <<: *mysql-base
     container_name: accounts-db
@@ -110,6 +138,8 @@ services:
     depends_on:
       configserver:
         condition: service_healthy
+      eurekaserver:
+        condition: service_healthy
       accountsdb:
         condition: service_healthy
     extends:
@@ -134,6 +164,8 @@ services:
       - "8090:8090"
     depends_on:
       configserver:
+        condition: service_healthy
+      eurekaserver:
         condition: service_healthy
       loansdb:
         condition: service_healthy
@@ -160,6 +192,8 @@ services:
       - "9000:9000"
     depends_on:
       configserver:
+        condition: service_healthy
+      eurekaserver:
         condition: service_healthy
       cardsdb:
         condition: service_healthy
