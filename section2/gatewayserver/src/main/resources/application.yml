@@ -1,0 +1,21 @@
+server:
+  port: 8072
+spring:
+  application:
+    name: gatewayserver
+# Learning-only: actuator shutdown endpoint
+# Do NOT enable in production
+management:
+  endpoints:
+    web:
+      exposure:
+        include: busrefresh, info, health, gateway
+  info:
+    env:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true
+    gateway:
+      enabled: true
