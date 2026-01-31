@@ -1,6 +1,8 @@
 server:
   port: 8072
 spring:
+#  main:
+#    web-application-type: reactive
   application:
     name: gatewayserver
 # Learning-only: actuator shutdown endpoint
@@ -9,7 +11,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: busrefresh, info, health, gateway
+        include: busrefresh, info, health, gateway, refresh, env
   info:
     env:
       enabled: true
@@ -18,4 +20,13 @@ management:
       probes:
         enabled: true
     gateway:
+#      routeDefinitionsLocator:
+#        enabled: true
       enabled: true
+    env:
+      enabled: true
+#    config:
+#      enabled: true
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
