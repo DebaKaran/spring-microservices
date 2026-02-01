@@ -58,3 +58,4 @@ build/
 ### VS Code ###
 .vscode/
 data/accountsdb.mv.db
+section2/cards/data/accountsdb.mv.db
