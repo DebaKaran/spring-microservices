@@ -7,14 +7,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-//@Component
-public class ResponseTimeFilter implements GlobalFilter, Ordered {
+import java.time.Instant;
+
+@Component
+public class GatewayTimingFilter implements GlobalFilter, Ordered {
 
     private static final String START_TIME = "requestStartTime";
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, org.springframework.cloud.gateway.filter.GatewayFilterChain chain) {
+    public Mono<Void> filter(ServerWebExchange exchange,
+                             org.springframework.cloud.gateway.filter.GatewayFilterChain chain) {
 
+        // Capture request entry time
         exchange.getAttributes().put(START_TIME, System.currentTimeMillis());
 
         return chain.filter(exchange).then(
@@ -22,7 +26,11 @@ public class ResponseTimeFilter implements GlobalFilter, Ordered {
                     Long startTime = exchange.getAttribute(START_TIME);
                     if (startTime != null) {
                         long duration = System.currentTimeMillis() - startTime;
+
                         ServerHttpResponse response = exchange.getResponse();
+
+                        // 🔥 Preferred approach (your choice)
+                        response.getHeaders().add("Gateway-Time", Instant.now().toString());
                         response.getHeaders().add("Response-Time", duration + "ms");
                     }
                 })
@@ -34,4 +42,3 @@ public class ResponseTimeFilter implements GlobalFilter, Ordered {
         return Ordered.LOWEST_PRECEDENCE;
     }
 }
-
