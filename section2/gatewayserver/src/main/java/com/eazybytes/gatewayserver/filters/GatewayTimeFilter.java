@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.OffsetDateTime;
 
-@Component
+//@Component
 public class GatewayTimeFilter implements GlobalFilter {
 
     @Override
