@@ -57,3 +57,4 @@ build/
 
 ### VS Code ###
 .vscode/
+data/accountsdb.mv.db
