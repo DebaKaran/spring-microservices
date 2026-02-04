@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Log directories
+/logs/
+/logs/**
+
+# Log files anywhere
+*.log
