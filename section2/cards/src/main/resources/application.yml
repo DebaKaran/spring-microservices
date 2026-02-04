@@ -29,3 +29,6 @@ management:
         enabled: true
     shutdown:
       enabled: false
+logging:
+  level:
+    com.eazybytes.cards: DEBUG
