@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- ============================= -->
+    <!-- ASYNC APPENDER (NON-CRITICAL) -->
+    <!-- ============================= -->
+    <!-- This is not working -->
+<!--    <appender name="ASYNC"-->
+<!--              class="ch.qos.logback.classic.AsyncAppender">-->
+<!--        <queueSize>2048</queueSize>-->
+<!--        <discardingThreshold>90</discardingThreshold>-->
+<!--        <neverBlock>true</neverBlock>-->
+<!--        &lt;!&ndash; Drop ERROR logs from async pipeline &ndash;&gt;-->
+<!--        <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+<!--            <level>ERROR</level>-->
+<!--            <onMatch>DENY</onMatch>-->
+<!--            <onMismatch>NEUTRAL</onMismatch>-->
+<!--        </filter>-->
+
+<!--        &lt;!&ndash; Forward to non-critical file &ndash;&gt;-->
+<!--        <appender-ref ref="ROLLING_FILE_NOT_CRITICAL"/>-->
+
+<!--    </appender>-->
+
+
+<!--    &lt;!&ndash; ============================= &ndash;&gt;-->
+<!--    &lt;!&ndash; ROLLING FILE APPENDER (NON-CRITICAL) &ndash;&gt;-->
+<!--    &lt;!&ndash; ============================= &ndash;&gt;-->
+<!--    <appender name="ROLLING_FILE_NOT_CRITICAL"-->
+<!--              class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+
+<!--        <file>logs/non_critical_app.log</file>-->
+<!--        <append>true</append>-->
+
+<!--        <rollingPolicy-->
+<!--                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
+
+<!--            <fileNamePattern>-->
+<!--                logs/non_critical_app-%d{yyyy-MM-dd}.%i.log-->
+<!--            </fileNamePattern>-->
+
+<!--            <maxFileSize>1MB</maxFileSize>-->
+<!--            <maxHistory>2</maxHistory>-->
+<!--            <totalSizeCap>5MB</totalSizeCap>-->
+
+<!--        </rollingPolicy>-->
+
+<!--        <encoder class="net.logstash.logback.encoder.LogstashEncoder">-->
+<!--            <includeMdc>true</includeMdc>-->
+<!--            &lt;!&ndash; ============================= &ndash;&gt;-->
+<!--            &lt;!&ndash; MASKING DECORATOR              &ndash;&gt;-->
+<!--            &lt;!&ndash; ============================= &ndash;&gt;-->
+<!--            <jsonGeneratorDecorator-->
+<!--                    class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">-->
+
+<!--                &lt;!&ndash; What masked value should look like &ndash;&gt;-->
+<!--                <defaultMask>******</defaultMask>-->
+
+<!--                &lt;!&ndash; Fields to be masked (ANYWHERE in JSON) &ndash;&gt;-->
+<!--                <path>password</path>-->
+<!--                <path>token</path>-->
+<!--                <path>creditCard</path>-->
+<!--                <path>cvv</path>-->
+<!--                <path>ssn</path>-->
+<!--                <path>email</path>-->
+<!--            </jsonGeneratorDecorator>-->
+<!--        </encoder>-->
+
+<!--    </appender>-->
+
+
+
+<!--    &lt;!&ndash; ============================= &ndash;&gt;-->
+<!--    &lt;!&ndash; FILE APPENDER (CRITICAL)      &ndash;&gt;-->
+<!--    &lt;!&ndash; ============================= &ndash;&gt;-->
+<!--    <appender name="ROLLING_FILE_CRITICAL"-->
+<!--              class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+
+<!--        <file>logs/app.log</file>-->
+<!--        <append>true</append>-->
+
+<!--        &lt;!&ndash; Allow only ERROR and above &ndash;&gt;-->
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--            <level>ERROR</level>-->
+<!--        </filter>-->
+
+<!--        <rollingPolicy-->
+<!--                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">-->
+
+<!--            <fileNamePattern>-->
+<!--                logs/app-%d{yyyy-MM-dd}.%i.log-->
+<!--            </fileNamePattern>-->
+
+<!--            <maxFileSize>1MB</maxFileSize>-->
+<!--            <maxHistory>2</maxHistory>-->
+<!--            <totalSizeCap>5MB</totalSizeCap>-->
+
+<!--        </rollingPolicy>-->
+
+<!--        <encoder class="net.logstash.logback.encoder.LogstashEncoder">-->
+<!--            <includeMdc>true</includeMdc>-->
+<!--            &lt;!&ndash; ============================= &ndash;&gt;-->
+<!--            &lt;!&ndash; MASKING DECORATOR              &ndash;&gt;-->
+<!--            &lt;!&ndash; ============================= &ndash;&gt;-->
+<!--            <jsonGeneratorDecorator-->
+<!--                    class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">-->
+
+<!--                &lt;!&ndash; What masked value should look like &ndash;&gt;-->
+<!--                <defaultMask>******</defaultMask>-->
+
+<!--                &lt;!&ndash; Fields to be masked (ANYWHERE in JSON) &ndash;&gt;-->
+<!--                <path>password</path>-->
+<!--                <path>token</path>-->
+<!--                <path>creditCard</path>-->
+<!--                <path>cvv</path>-->
+<!--                <path>ssn</path>-->
+<!--                <path>email</path>-->
+<!--            </jsonGeneratorDecorator>-->
+<!--        </encoder>-->
+<!--    </appender>-->
+
+<!--    &lt;!&ndash; ============================= &ndash;&gt;-->
+<!--    &lt;!&ndash; LOGGER CONFIGURATION          &ndash;&gt;-->
+<!--    &lt;!&ndash; ============================= &ndash;&gt;-->
+<!--    <logger name="com.eazybytes.gatewayserver"-->
+<!--            level="INFO"-->
+<!--            additivity="false">-->
+
+<!--        <appender-ref ref="ASYNC"/>-->
+<!--        <appender-ref ref="ROLLING_FILE_CRITICAL"/>-->
+
+<!--    </logger>-->
+
+<!--    &lt;!&ndash; ============================= &ndash;&gt;-->
+<!--    &lt;!&ndash; ROOT LOGGER                   &ndash;&gt;-->
+<!--    &lt;!&ndash; ============================= &ndash;&gt;-->
+<!--    <root level="INFO">-->
+<!--        <appender-ref ref="ASYNC"/>-->
+<!--        <appender-ref ref="ROLLING_FILE_CRITICAL"/>-->
+<!--    </root>-->
+
+    <!--This is working -->
+    <!-- ============================= -->
+    <!-- NON-CRITICAL JSON FILE        -->
+    <!-- ============================= -->
+    <appender name="FILE_NON_CRITICAL"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>logs/non_critical_app.log</file>
+        <append>true</append>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                logs/non_critical_app-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
+        </rollingPolicy>
+
+        <!-- JSON encoder with MDC -->
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdc>true</includeMdc>
+        </encoder>
+
+    </appender>
+
+    <!-- ============================= -->
+    <!-- ASYNC WRAPPER (SAFE)          -->
+    <!-- ============================= -->
+    <appender name="ASYNC_NON_CRITICAL"
+              class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>1024</queueSize>
+        <neverBlock>true</neverBlock>
+
+        <!-- Do NOT async ERROR logs -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>NEUTRAL</onMismatch>
+        </filter>
+
+        <appender-ref ref="FILE_NON_CRITICAL"/>
+    </appender>
+
+    <!-- ============================= -->
+    <!-- CRITICAL FILE (SYNC)          -->
+    <!-- ============================= -->
+    <appender name="FILE_CRITICAL"
+              class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>logs/app.log</file>
+        <append>true</append>
+
+        <!-- Only ERROR and above -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>
+                logs/app-%d{yyyy-MM-dd}.%i.log
+            </fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <includeMdc>true</includeMdc>
+        </encoder>
+
+    </appender>
+
+    <!-- ============================= -->
+    <!-- APPLICATION LOGGER            -->
+    <!-- ============================= -->
+    <logger name="com.eazybytes.gatewayserver"
+            level="INFO"
+            additivity="false">
+        <appender-ref ref="ASYNC_NON_CRITICAL"/>
+        <appender-ref ref="FILE_CRITICAL"/>
+    </logger>
+
+    <!-- ============================= -->
+    <!-- ROOT LOGGER                   -->
+    <!-- ============================= -->
+    <root level="INFO">
+        <appender-ref ref="ASYNC_NON_CRITICAL"/>
+        <appender-ref ref="FILE_CRITICAL"/>
+    </root>
+    <appender name="STDOUT"
+              class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
