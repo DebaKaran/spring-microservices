@@ -59,3 +59,4 @@ build/
 .vscode/
 data/accountsdb.mv.db
 section2/cards/data/accountsdb.mv.db
+data/loansdb.mv.db
