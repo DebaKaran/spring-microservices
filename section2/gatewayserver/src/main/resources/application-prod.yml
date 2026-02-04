@@ -1,1 +1,5 @@
 # This is the placeholder for production environment configuration for the gatewayserver microservice.
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    com.eazybytes.gatewayserver: INFO
