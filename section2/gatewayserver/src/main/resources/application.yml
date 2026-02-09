@@ -11,7 +11,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: busrefresh, info, health, gateway, refresh, env, circuitbreakers
+        include: busrefresh, info, health, gateway, refresh, env, circuitbreakers, circuitBreakerEvents
   info:
     env:
       enabled: true
