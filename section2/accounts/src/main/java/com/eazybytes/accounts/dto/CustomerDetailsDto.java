@@ -16,4 +16,8 @@ public class CustomerDetailsDto {
     private AccountsDto accountsDto;
     private LoansDto loansDto;
     private CardsDto cardsDto;
+
+    //these two fields are required as we need to communicate frontend whether other ms are down
+    private boolean loansServiceDown;
+    private boolean cardsServiceDown;
 }
