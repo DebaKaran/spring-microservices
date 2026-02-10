@@ -43,19 +43,29 @@ public class CustomersServiceImpl implements ICustomersService {
         CustomerDetailsDto customerDetailsDto = CustomerMapper.mapToCustomerDetailsDto(customer, new CustomerDetailsDto());
         customerDetailsDto.setAccountsDto(AccountsMapper.mapToAccountsDto(accounts, new AccountsDto()));
 
-        ResponseEntity<LoansDto> loansDtoResponseEntity = loansFeignClient.fetchLoanDetails(correlationId, mobileNumber);
+        ResponseEntity<LoansDto> loansResponse = loansFeignClient.fetchLoanDetails(correlationId, mobileNumber);
 
-        //as fallback response is null
-        if(null != loansDtoResponseEntity) {
-            customerDetailsDto.setLoansDto(loansDtoResponseEntity.getBody());
-        }
+        LoansDto loansDto = loansResponse.getBody();
 
+        // We check the HEADER, not DTO fields, because:
+        // - DTO represents business data
+        // - Header represents system health / resilience metadata
+        // - Business-valid states (e.g. no loans) must not be treated as failures
 
+        boolean loansServiceDown =
+                loansResponse.getHeaders().containsHeader("X-SERVICE-DEGRADED");
 
-        ResponseEntity<CardsDto> cardsDtoResponseEntity = cardsFeignClient.fetchCardDetails(correlationId, mobileNumber);
-        if(null != cardsDtoResponseEntity) {
-            customerDetailsDto.setCardsDto(cardsDtoResponseEntity.getBody());
-        }
+        customerDetailsDto.setLoansServiceDown(loansServiceDown);
+        customerDetailsDto.setLoansDto(loansDto);
+
+        ResponseEntity<CardsDto> cardsResponse = cardsFeignClient.fetchCardDetails(correlationId, mobileNumber);
+        CardsDto cardsDto = cardsResponse.getBody();
+
+        boolean cardsServiceDown =
+                cardsResponse.getHeaders().containsHeader("X-SERVICE-DEGRADED");
+
+        customerDetailsDto.setCardsServiceDown(cardsServiceDown);
+        customerDetailsDto.setCardsDto(cardsDto);
         return customerDetailsDto;
 
     }
