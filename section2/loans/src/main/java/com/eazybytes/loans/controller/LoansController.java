@@ -21,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 /**
  * @author Eazy Bytes
  */
@@ -103,6 +105,14 @@ public class LoansController {
                                                      @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
                                                      String mobileNumber) {
         logger.debug("eazyBank-correlation-id found: {} ", correlationId);
+
+        logger.debug("Simulating 503 Service Unavailable");
+
+        //for retry testing
+        // return ResponseEntity
+        //         .status(HttpStatus.SERVICE_UNAVAILABLE)
+        //         .build();
+
         LoansDto loansDto = iLoansService.fetchLoan(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK).body(loansDto);
     }
